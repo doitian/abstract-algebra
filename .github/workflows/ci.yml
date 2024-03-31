@@ -1,0 +1,26 @@
+name: Cargo Build & Test
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_and_test:
+    name: Rust project
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        task:
+          - check
+          - fmt
+          - build
+          - test
+    steps:
+      - uses: actions/checkout@v3
+      - name: cargo ${{ matrix.task }}
+        run: cargo ${{ matrix.task }} --verbose
+      - name: ensure changes are committed
+        run: git diff --exit-code .
